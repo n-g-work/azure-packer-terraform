@@ -13,9 +13,28 @@ To get through with all the operations these requirements should be met:
 * packer installed locally
 * azure cli installed locally
 
+Install on Linux (Ubuntu):
+
+```bash
+sudo apt-get install -y azure-cli terraform packer
+```
+
 ## Cost
 
 With the use of Azure free account the actions could be performed without an additional cost. However free Azure account registration requires use of a banking card.
+
+## Login to Azure with device code
+
+Run command to obtain device code:
+
+```bash
+az login --use-device-code
+```
+
+Expected result:
+To sign in, use a web browser to open the page [https://microsoft.com/devicelogin] and enter the code `YOUR DEVICE CODE` to authenticate.
+
+Go to the page and input obtained code.
 
 ## Azure + packer
 
@@ -25,25 +44,42 @@ Create azure resource group:
 az group create -n packergroup -l eastus
 ```
 
-Create service principal (app registration):
+Get Azure subscription id:
 
 ```bash
-az ad sp create-for-rbac --role Contributor --name packer001 --query "{ client_id: appId, client_secret: password, tenant_id: tenant }"
+az account show --query "{ subscription_id: id }"
 ```
 
 Expected output:
 
 ```json
 {
-    "": ""
+  "subscription_id": "{YOUR SUBSCRIPTION ID}"
 }
 ```
 
-Get Azure subscription id:
+Create service principal (app registration):
 
 ```bash
-az account show --query "{ subscription_id: id }"
+az ad sp create-for-rbac --role Contributor --name api://packer001 \
+    --query "{ client_id: appId, client_secret: password, tenant_id: tenant }" \
+    --scopes /subscriptions/{YOUR SUBSCRIPTION ID}/resourceGroups/packergroup
 ```
+
+Expected output:
+Creating a role assignment under the scope of "/subscriptions/815662c5-ba1b-4526-aad0-fe1c70e27ed0/resourceGroups/packergroup"
+  Retrying role assignment creation: 1/36
+  Retrying role assignment creation: 2/36
+
+```json
+{
+  "client_id": "{YOUR CLIENT ID}",    
+  "client_secret": "{YOUR CLIENT SECRECT}",
+  "tenant_id": "{YOUR TENANT ID}"     
+}
+```
+
+Update the client and tenant info in packer image description - [packer/azure-ubuntu.json] or [packer/azure-ubuntu.pkr.hcl]
 
 Build packer image:
 
