@@ -44,6 +44,22 @@ Create azure resource group:
 az group create -n packergroup -l eastus
 ```
 
+Expected output: 
+
+```bash
+{
+  "id": "/subscriptions/{YOUR SUBSCRIPTION ID}/resourceGroups/packergroup",
+  "location": "eastus",
+  "managedBy": null,
+  "name": "packergroup",
+  "properties": {
+    "provisioningState": "Succeeded"
+  },
+  "tags": null,
+  "type": "Microsoft.Resources/resourceGroups"
+}
+```
+
 Get Azure subscription id:
 
 ```bash
@@ -61,13 +77,13 @@ Expected output:
 Create service principal (app registration):
 
 ```bash
-az ad sp create-for-rbac --role Contributor --name api://packer001 \
+az ad sp create-for-rbac --role Owner --name api://packer001 \
     --query "{ client_id: appId, client_secret: password, tenant_id: tenant }" \
-    --scopes /subscriptions/{YOUR SUBSCRIPTION ID}/resourceGroups/packergroup
+    --scopes /subscriptions/{YOUR SUBSCRIPTION ID}
 ```
 
 Expected output:
-Creating a role assignment under the scope of "/subscriptions/815662c5-ba1b-4526-aad0-fe1c70e27ed0/resourceGroups/packergroup"
+Creating a role assignment under the scope of "/subscriptions/{YOUR SUBSCRIPTION ID}"
   Retrying role assignment creation: 1/36
   Retrying role assignment creation: 2/36
 
@@ -79,12 +95,13 @@ Creating a role assignment under the scope of "/subscriptions/815662c5-ba1b-4526
 }
 ```
 
-Update the client and tenant info in packer image description - [packer/azure-ubuntu.json] or [packer/azure-ubuntu.pkr.hcl]
+Update the client and tenant info in packer variables files - [packer/variables.json]
 
 Build packer image:
 
 ```packer
-packer build azure-ubuntu.json
+cd packer/
+packer build -var-file variables.json azure-ubuntu.json
 ```
 
 Create VM in Azure using built packer image:
@@ -104,3 +121,16 @@ Convert pakcer json file to hcl:
 ```bash
 packer hcl2_upgrade -with-annotations azure-ubuntu.json
 ```
+
+## Automation
+
+Useful scripts:
+
+* scripts/init.sh - creates resource group, app registration and packer image
+* scripts/remove.sh - removes sensitive info, app registration and resource group
+
+The scripts use variables from scripts/vars.sh.
+
+## References
+
+[How to use Packer to create Linux virtual machine images in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/build-image-with-packer)
