@@ -4,21 +4,24 @@ trap 'echo "catched error on line $LINENO ";exit 1' ERR
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit ; pwd -P )"
 
-# shellcheck source=/dev/null
-source "$SCRIPTPATH/vars.sh"
+vars_path="${SCRIPTPATH}/../.tfvars.json"
+
+AZ_RESOURCE_GROUP_NAME=$(jq -r '.AZ_RESOURCE_GROUP_NAME' "$vars_path")
+AZ_APP_NAME=$(jq -r '.AZ_APP_NAME' "$vars_path")
 
 # delete sensitive info
 echo "removing sensitive info ..."
-cat <<EOF >"${SCRIPTPATH}/../packer/variables.json"
-{
-    "client_id": "",
-    "client_secret": "",
-    "tenant_id": "",
-    "subscription_id": "",
-    "resource_group_name": "",
-    "image_name": ""
-}
-EOF
+vars_path="$SCRIPTPATH/../.tfvars.json"
+tmp=$(mktemp)
+jq '. + {
+        client_id: "",
+        client_secret: "",
+        tenant_id: "",
+        subscription_id: "",
+        resource_group_name: "",
+        image_name: ""
+    }' \
+    "$vars_path" > "$tmp" && mv "$tmp" "$vars_path"
 
 # remove app registration
 echo "removing app registration ..."
