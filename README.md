@@ -12,11 +12,12 @@ To get through with all the operations these requirements should be met:
 * terraform installed locally
 * packer installed locally
 * azure cli installed locally
+* jq installed
 
 Install on Linux (Ubuntu):
 
 ```bash
-sudo apt-get install -y azure-cli terraform packer
+sudo apt-get install -y azure-cli terraform packer jq
 ```
 
 ## Cost
@@ -44,7 +45,7 @@ Create azure resource group:
 az group create -n packergroup -l eastus
 ```
 
-Expected output: 
+Expected output:
 
 ```bash
 {
@@ -133,4 +134,5 @@ The scripts use variables from scripts/vars.sh.
 
 ## References
 
-[How to use Packer to create Linux virtual machine images in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/build-image-with-packer)
+* [How to use Packer to create Linux virtual machine images in Azure](https://docs.microsoft.com/en-us/azure/virtual-machines/linux/build-image-with-packer)
+* [Create an Azure virtual machine scale set from a Packer custom image by using Terraform](https://docs.microsoft.com/en-us/azure/developer/terraform/create-vm-scaleset-network-disks-using-packer-hcl)
