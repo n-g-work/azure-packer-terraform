@@ -54,6 +54,9 @@ jq '. + {
     "$vars_path" > "$tmp" && mv "$tmp" "$vars_path"
 # revert variables: git checkout -q .tfvars.json
 
+echo "waiting for azure..."
+sleep 10s
+
 # run packer build
 packer validate -var-file "${vars_path}" "${SCRIPTPATH}/../packer/azure-ubuntu.json"
 packer build -var-file "${vars_path}" "${SCRIPTPATH}/../packer/azure-ubuntu.json"
