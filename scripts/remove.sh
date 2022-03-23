@@ -7,11 +7,10 @@ SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit ; pwd -P )"
 echo "removing ansible roles..."
 rm -rf "${SCRIPTPATH}/../ansible/roles/"
 
-vars_path="${SCRIPTPATH}/../.tfvars.json"
+vars_path="${SCRIPTPATH}/../variables.json"
 
 # delete sensitive info
 echo "removing sensitive info ..."
-vars_path="$SCRIPTPATH/../.tfvars.json"
 tmp=$(mktemp)
 jq '. + {
         client_id: "",

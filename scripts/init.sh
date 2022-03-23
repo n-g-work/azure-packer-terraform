@@ -6,7 +6,7 @@ SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit ; pwd -P )"
 
 ansible-galaxy install -r "${SCRIPTPATH}/../ansible/requirements.yml" --roles-path "${SCRIPTPATH}/../ansible/roles/"
 
-vars_path="${SCRIPTPATH}/../.tfvars.json"
+vars_path="${SCRIPTPATH}/../variables.json"
 
 packer_images_resource_group=$(jq -r '.packer_images_resource_group' "$vars_path")
 location=$(jq -r '.location' "$vars_path")

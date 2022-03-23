@@ -1,5 +1,5 @@
 locals {
-  vars = jsondecode(file("${path.module}/../.tfvars.json"))
+  vars = jsondecode(file("${path.module}/../variables.json"))
 }
 
 #configure the Azure provider
