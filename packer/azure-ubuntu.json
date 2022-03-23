@@ -7,21 +7,21 @@
     "tenant_id":       "{{user `tenant_id`}}",
     "subscription_id": "{{user `subscription_id`}}",
 
-    "managed_image_resource_group_name": "{{user `images_resource_group_name`}}",
-    "managed_image_name": "{{user `image_name`}}",
+    "managed_image_resource_group_name": "{{user `packer_images_resource_group`}}",
+    "managed_image_name": "{{user `packer_image_name`}}",
 
-    "os_type": "Linux",
-    "image_publisher": "Canonical",
-    "image_offer": "UbuntuServer",
-    "image_sku": "16.04-LTS",
+    "os_type": "{{user `os_type`}}",
+    "image_publisher": "{{user `image_publisher`}}",
+    "image_offer": "{{user `image_offer`}}",
+    "image_sku": "{{user `image_sku`}}",
 
     "azure_tags": {
         "dept": "Devops",
         "task": "Image deployment"
     },
 
-    "location": "East US",
-    "vm_size": "Standard_A2_v2"
+    "location": "{{user `location_display_name`}}",
+    "vm_size": "{{user `vm_size`}}"
   }],
   "provisioners": [{
     "execute_command": "chmod +x {{ .Path }}; {{ .Vars }} sudo -E sh '{{ .Path }}'",
