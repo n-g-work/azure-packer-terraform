@@ -18,8 +18,6 @@ jq '. + {
         client_secret: "",
         tenant_id: "",
         subscription_id: "",
-        resource_group_name: "",
-        image_name: ""
     }' \
     "$vars_path" > "$tmp" && mv "$tmp" "$vars_path"
 
