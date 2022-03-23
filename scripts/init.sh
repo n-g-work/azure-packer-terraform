@@ -6,14 +6,13 @@ SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit ; pwd -P )"
 
 vars_path="${SCRIPTPATH}/../.tfvars.json"
 
-AZ_RESOURCE_GROUP_NAME=$(jq -r '.AZ_RESOURCE_GROUP_NAME' "$vars_path")
-AZ_LOCATION=$(jq -r '.AZ_LOCATION' "$vars_path")
-AZ_SP_ROLE=$(jq -r '.AZ_SP_ROLE' "$vars_path")
-AZ_APP_NAME=$(jq -r '.AZ_APP_NAME' "$vars_path")
-AZ_PACKER_IMAGE_NAME=$(jq -r '.AZ_PACKER_IMAGE_NAME' "$vars_path")
+packer_images_resource_group=$(jq -r '.packer_images_resource_group' "$vars_path")
+location=$(jq -r '.location' "$vars_path")
+service_principal_role=$(jq -r '.service_principal_role' "$vars_path")
+packer_app_name=$(jq -r '.packer_app_name' "$vars_path")
 
-# create azure resource group
-az_resource_group=$(az group create -n "${AZ_RESOURCE_GROUP_NAME}" -l "${AZ_LOCATION}")
+# create packer resource group in azure
+az_resource_group=$(az group create -n "${packer_images_resource_group}" -l "${location}")
 
 echo "azure resource group:"
 echo "${az_resource_group}"
@@ -25,7 +24,7 @@ subscription_id=$(jq -r '.subscription_id' <<< "${az_subscription}")
 echo "azure subscription id: ${subscription_id}"
 
 # create azure service principal (app registration) and grant permissions to resource group
-az_app_registration=$(az ad sp create-for-rbac --role "${AZ_SP_ROLE}" --name "api://${AZ_APP_NAME}" \
+az_app_registration=$(az ad sp create-for-rbac --role "${service_principal_role}" --name "api://${packer_app_name}" \
     --query "{ client_id: appId, client_secret: password, tenant_id: tenant }" \
     --scopes "/subscriptions/${subscription_id}")
 
@@ -47,9 +46,7 @@ jq '. + {
         client_id: "'"$client_id"'",
         client_secret: "'"$client_secret"'",
         tenant_id: "'"$tenant_id"'",
-        subscription_id: "'"$subscription_id"'",
-        resource_group_name: "'"$AZ_RESOURCE_GROUP_NAME"'",
-        image_name: "'"$AZ_PACKER_IMAGE_NAME"'"
+        subscription_id: "'"$subscription_id"'"
     }' \
     "$vars_path" > "$tmp" && mv "$tmp" "$vars_path"
 # revert variables: git checkout -q .tfvars.json
