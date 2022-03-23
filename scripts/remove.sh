@@ -4,6 +4,9 @@ trap 'echo "catched error on line $LINENO ";exit 1' ERR
 
 SCRIPTPATH="$( cd -- "$(dirname "$0")" >/dev/null 2>&1 || exit ; pwd -P )"
 
+echo "removing ansible roles..."
+rm -rf "${SCRIPTPATH}/../ansible/roles/"
+
 vars_path="${SCRIPTPATH}/../.tfvars.json"
 
 # delete sensitive info
