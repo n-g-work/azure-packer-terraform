@@ -1,3 +1,7 @@
+locals {
+  vars = jsondecode(file("${path.module}/../.tfvars.json"))
+}
+
 #configure the Azure provider
 terraform {
   required_providers {
