@@ -63,7 +63,10 @@ packer validate -var-file "${vars_path}" "${SCRIPTPATH}/../packer/azure-ubuntu.j
 echo "building packer image..."
 packer build -var-file "${vars_path}" "${SCRIPTPATH}/../packer/azure-ubuntu.json"
 
-# TODO: 
 # create vm with terraform
-# cd ${SCRIPTPATH}/../terraform/
+cd "${SCRIPTPATH}/../terraform/" || exit
+echo "validating terraform..."
+terraform validate
+echo "applying terraform module..."
+# TODO:
 # terraform apply -auto-approve
