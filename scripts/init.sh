@@ -51,7 +51,6 @@ jq '. + {
         subscription_id: "'"$subscription_id"'"
     }' \
     "$vars_path" > "$tmp" && mv "$tmp" "$vars_path"
-# revert variables: git checkout -q .tfvars.json
 
 echo "waiting for azure..."
 sleep 10s
