@@ -56,8 +56,11 @@ jq '. + {
 echo "waiting for azure..."
 sleep 10s
 
-# run packer build
+# run packer
+echo "validating packer..."
 packer validate -var-file "${vars_path}" "${SCRIPTPATH}/../packer/azure-ubuntu.json"
+
+echo "building packer image..."
 packer build -var-file "${vars_path}" "${SCRIPTPATH}/../packer/azure-ubuntu.json"
 
 # TODO: 
