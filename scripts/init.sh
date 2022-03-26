@@ -53,7 +53,7 @@ jq '. + {
     "$vars_path" > "$tmp" && mv "$tmp" "$vars_path"
 
 echo "waiting for azure..."
-sleep 10s
+sleep 15s
 
 # run packer
 echo "validating packer..."
