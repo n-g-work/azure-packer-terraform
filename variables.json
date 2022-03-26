@@ -18,7 +18,7 @@
   "os_type": "Linux",
   "image_publisher": "Canonical",
   "image_offer": "UbuntuServer",
-  "image_sku": "16.04-LTS",
+  "image_sku": "18.04-LTS",
   "vm_public_ip_allocation_method": "Dynamic",
   "vm_admin_user": "vmadmin",
   "vm_admin_ssh_key_path": "~/.ssh/id_rsa.pub"
