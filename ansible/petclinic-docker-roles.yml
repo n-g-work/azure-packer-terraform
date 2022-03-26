@@ -1,8 +1,8 @@
 ---
 - hosts: default
+  become: true
   tasks:
     - name: Update and upgrade apt packages
-      become: true
       apt:
         upgrade: yes
         update_cache: yes
@@ -32,6 +32,8 @@
       #become: true  # WILL STOP WORKING IF UNCOMMENTED
       pip:
         name: docker
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
 
     - name: "run container"
       docker_container:
@@ -41,3 +43,5 @@
         pull: true
         ports:
           - "80:8080"
+      vars:
+        ansible_python_interpreter: /usr/bin/python3
