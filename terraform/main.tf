@@ -87,6 +87,15 @@ resource "azurerm_network_interface_security_group_association" "nsgroup2nic" {
   network_security_group_id = azurerm_network_security_group.nsgroup.id
 }
 
+data "azurerm_resource_group" "customimages" {
+  name                = local.vars.packer_images_resource_group
+}
+
+data "azurerm_image" "customimage" {
+  name                = local.vars.packer_image_name
+  resource_group_name = data.azurerm_resource_group.customimages.name
+}
+
 # Create vm
 resource "azurerm_linux_virtual_machine" "vm" {
   name                  = local.vars.vm_name
@@ -106,12 +115,7 @@ resource "azurerm_linux_virtual_machine" "vm" {
     storage_account_type = "Standard_LRS"
   }
 
-  source_image_reference {
-    publisher = local.vars.image_publisher
-    offer     = local.vars.image_offer
-    sku       = local.vars.image_sku
-    version   = "latest"
-  }
+  source_image_id = data.azurerm_image.customimage.id
 }
 
 # Print out IP address of the new VM
