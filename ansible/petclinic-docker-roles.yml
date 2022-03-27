@@ -1,39 +1,21 @@
 ---
 - hosts: default
   become: true
-  tasks:
-    - name: Update and upgrade apt packages
-      apt:
-        upgrade: yes
-        update_cache: yes
-        cache_valid_time: 86400 #One day
-
-    - name: "install"
-      apt:
-        pkg:
-          - ca-certificates
-          - apt-transport-https
-
-- hosts: default
-  become: true
   roles:
     - geerlingguy.docker
 
-- hosts: default
   tasks:
     - name: install python dependencies
       become: true
       apt:
         update_cache: yes
         state: latest
-        name: python3-pip
+        name: python-pip
 
     - name: install 'Docker SDK for Python'
       #become: true  # WILL STOP WORKING IF UNCOMMENTED
       pip:
         name: docker
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
 
     - name: "run container"
       docker_container:
@@ -43,5 +25,3 @@
         pull: true
         ports:
           - "80:8080"
-      vars:
-        ansible_python_interpreter: /usr/bin/python3
