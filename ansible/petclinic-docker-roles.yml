@@ -21,6 +21,7 @@
       docker_container:
         name: ng01000_petclinic
         state: started
+        restart_policy: unless-stopped
         image: ng01000/petclinic:latest
         pull: true
         ports:
