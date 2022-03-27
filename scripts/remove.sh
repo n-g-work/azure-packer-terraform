@@ -30,5 +30,9 @@ az ad sp delete --id "${app_id}" || true
 echo "removing resource groups ..."
 jq -r '.packer_images_resource_group' "$vars_path"
 az group delete -n "$(jq -r '.packer_images_resource_group' "$vars_path")" --yes || true
+
+# remove everything terraform created
+terraform destroy -auto-approve 
+
 jq -r '.vm_resource_group_name' "$vars_path"
 az group delete -n "$(jq -r '.vm_resource_group_name' "$vars_path")" --yes || true

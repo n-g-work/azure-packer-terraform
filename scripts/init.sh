@@ -67,5 +67,4 @@ cd "${SCRIPTPATH}/../terraform/" || exit
 echo "validating terraform..."
 terraform validate
 echo "applying terraform module..."
-# TODO:
-# terraform apply -auto-approve
+terraform apply -auto-approve
