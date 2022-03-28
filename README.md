@@ -13,11 +13,12 @@ To get through with all the operations these requirements should be met:
 * packer installed locally
 * azure cli installed locally
 * jq installed
+* ansible and docker for debug
 
 Install on Linux (Ubuntu):
 
 ```bash
-sudo apt-get install -y azure-cli terraform packer jq
+sudo apt-get install -y azure-cli terraform packer jq ansible
 ```
 
 ## Cost
@@ -127,10 +128,10 @@ packer hcl2_upgrade -with-annotations azure-ubuntu.json
 
 Useful scripts:
 
-* scripts/init.sh - creates resource group, app registration and packer image
-* scripts/remove.sh - removes sensitive info, app registration and resource group
+* scripts/init.sh - installs ansible galaxy roles, then creates azure resource group for packer images, app registration (packer app) and packer image, and then launches terraform
+* scripts/remove.sh - removes ansible roles, sensitive info, app registration and resource groups
 
-The scripts use variables from scripts/vars.sh.
+The scripts use variables from variables.json.
 
 ## References
 
