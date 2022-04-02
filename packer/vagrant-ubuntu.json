@@ -1,0 +1,23 @@
+{
+  "builders": [
+    {
+      "type": "vagrant",
+      "communicator": "ssh",
+      "source_path": "hashicorp/focal64",
+      "provider": "virtualbox",
+      "add_force": true,
+      "insert_key": true,
+      "box_name": "petclinic-vm"
+    }
+  ],
+  "provisioners": [{
+    "type": "shell",
+    "inline": ["echo foo"]
+  },{
+    "type": "ansible",
+    "playbook_file": "./ansible/petclinic-docker-roles.yml",
+    "extra_arguments": [
+        "--become"
+    ]
+  }]
+}
