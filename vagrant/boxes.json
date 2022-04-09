@@ -8,6 +8,7 @@
         "name": "registry",
         "description": "Registry VM. Should be first to spin up, because it is needed to create docker image for app and host the image for app VMs to pull from",
         "box": "bionic_docker_local.box",
+        "playbook": "ansible/registry.yml",
         "memory": 4096,
         "cpus": 4,
         "ip": "192.168.56.10"

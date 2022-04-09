@@ -1,0 +1,62 @@
+---
+- hosts: registry
+  become: true
+  pre_tasks:
+    - name: Update repositories cache
+      apt:
+        update_cache: yes
+
+  roles:
+    - geerlingguy.docker
+
+  tasks:
+    - name: install python dependencies
+      become: true
+      apt:
+        update_cache: yes
+        state: latest
+        name: python3-pip
+
+    - name: install 'Docker SDK for Python'
+      #become: true  # WILL STOP WORKING IF UNCOMMENTED
+      pip:
+        name: docker
+
+    - name: add vagrant user to docker group
+      user:
+        name: vagrant
+        append: yes
+        groups: docker
+      become: true
+
+    - name: ensure daemon.json file exists
+      file: 
+        path: /etc/docker/daemon.json
+        state: touch
+    - name: add local ip address to allowed insecure hosts
+      lineinfile: 
+        path: /etc/docker/daemon.json
+        state: present
+        line: "{{ item.value | string }}"
+      with_items:
+        - "{\"insecure-registries\":[\"{{ip}}:5000\"]}"
+
+    - name: "run registry container"
+      docker_container:
+        name: registry
+        state: started
+        restart_policy: unless-stopped
+        image: registry:2.8.1
+        pull: true
+        ports:
+          - "5000:5000"
+
+    - name: build and publish petclinic docker image
+      docker_image:
+        build:
+          path: "/vagrant/"
+          pull: no
+        name: "{{ip}}:5000/petclinic"
+        tag: latest
+        push: yes
+        source: build
