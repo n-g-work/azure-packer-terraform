@@ -1,0 +1,44 @@
+---
+- hosts: lb
+  become: true
+  pre_tasks:
+    - name: Update repositories cache
+      apt:
+        update_cache: yes
+
+  roles:
+    - geerlingguy.docker
+
+  tasks:
+    - name: install python dependencies
+      become: true
+      apt:
+        update_cache: yes
+        state: latest
+        name: python3-pip
+
+    - name: install 'Docker SDK for Python'
+      #become: true  # WILL STOP WORKING IF UNCOMMENTED
+      pip:
+        name: docker
+
+    - name: add vagrant user to docker group
+      user:
+        name: vagrant
+        append: yes
+        groups: docker
+      become: true
+
+    - name: run nginx container
+      docker_container:
+        name: nginx-lb
+        state: started
+        restart_policy: unless-stopped
+        image: nginx:1.21.6-alpine
+        #pull: true
+        ports:
+          - "80:80"
+        volumes:
+          - /vagrant/balancer/nginx.conf:/etc/nginx/nginx.conf
+          - /vagrant/balancer/logs:/etc/nginx/logs
+          - /vagrant/balancer/html:/var/www/html

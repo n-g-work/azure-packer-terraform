@@ -40,6 +40,7 @@
         "name": "lb",
         "description": "Load Balancer VM. Should be spun up after the app VMs",
         "box": "bionic_docker_local.box",
+        "playbook": "ansible/balancer.yml",
         "memory": 512,
         "cpus": 1,
         "ip": "192.168.56.40"
