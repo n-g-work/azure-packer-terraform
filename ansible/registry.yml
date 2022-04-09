@@ -37,9 +37,13 @@
       lineinfile: 
         path: /etc/docker/daemon.json
         state: present
-        line: "{{ item.value | string }}"
-      with_items:
-        - "{\"insecure-registries\":[\"{{ip}}:5000\"]}"
+        line: "{{ item.value | to_nice_json }}"
+      with_items: 
+        - value: "{\"insecure-registries\":[\"{{ip}}:5000\"]}"
+    - name: docker restart
+      service:
+        name: docker
+        state: restarted
 
     - name: "run registry container"
       docker_container:
