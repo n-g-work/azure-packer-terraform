@@ -20,12 +20,20 @@ if grep -q Microsoft /proc/version; then
   export VAGRANT_WSL_ENABLE_WINDOWS_ACCESS="1"
 fi
 
-echo "building packer image..."
-packer build -force -var-file "${vars_path}" "${SCRIPTPATH}/../packer/vagrant-ubuntu.json"
+# build base VM from bionic ubuntu cloud image with addition of docker
+VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile_default" vagrant up
 
-# create vm with terraform
-cd "${SCRIPTPATH}/../terraform/" || exit
-echo "validating terraform..."
-terraform validate
-echo "applying terraform module..."
-terraform apply -auto-approve
+# stop built VM
+VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile_default" vagrant halt
+
+# export it as a new box
+vagrant package --base bionic_docker_local --output bionic_docker_local.box
+
+# remove the no longer needed VM
+VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile_default" vagrant destroy -f
+
+# add the box to vagrant inventory
+vagrant box add "bionic_docker_local.box" "${SCRIPTPATH}/../bionic_docker_local.box"
+
+# start and provision all the VMs
+VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile" vagrant up
