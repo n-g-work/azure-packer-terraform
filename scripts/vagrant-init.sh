@@ -21,16 +21,16 @@ if grep -q Microsoft /proc/version; then
 fi
 
 # build base VM from bionic ubuntu cloud image with addition of docker
-VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile_default" vagrant up
+VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile_base" vagrant up
 
 # stop built VM
-VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile_default" vagrant halt
+VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile_base" vagrant halt
 
 # export it as a new box
 vagrant package --base bionic_docker_local --output bionic_docker_local.box
 
 # remove the no longer needed VM
-VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile_default" vagrant destroy -f
+VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile_base" vagrant destroy -f
 
 # add the box to vagrant inventory
 vagrant box add "bionic_docker_local.box" "${SCRIPTPATH}/../bionic_docker_local.box"
