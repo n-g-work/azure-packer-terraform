@@ -26,7 +26,10 @@ VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile_base" vagrant up
 # stop built VM
 VAGRANT_VAGRANTFILE="${SCRIPTPATH}/../vagrant/Vagrantfile_base" vagrant halt
 
-# export it as a new box
+# remove box if it exists
+vagrant box remove "bionic_docker_local" || true
+
+# export VM as a new box
 vagrant package --base bionic_docker_local --output bionic_docker_local.box
 
 # remove the no longer needed VM
