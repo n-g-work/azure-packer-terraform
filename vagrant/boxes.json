@@ -1,0 +1,8 @@
+[
+    {
+        "name": "bionic_docker_local",
+        "description": "This is a default VM. This is a shortcut: to create a VM, install docker and skip docker installation on all other VMs",
+        "box": "https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64-vagrant.box",
+        "playbook": "ansible/bionic-docker-local.yml"
+    }
+]

@@ -1,0 +1,25 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+require 'json'
+
+boxes = JSON.parse(File.read(File.join(File.dirname(__FILE__), 'boxes.json')))
+
+Vagrant.configure("2") do |config|
+    config.ssh.insert_key = false
+    config.ssh.forward_agent = true
+
+    config.vm.box = boxes[0]['box']
+
+    config.vm.provider "virtualbox" do |vb|
+        vb.name = boxes[0]['name']
+        # Display the VirtualBox GUI when booting the machine
+        vb.gui = false
+        # make it usable from WSL:
+        vb.customize [ "modifyvm", :id, "--uartmode1", "disconnected" ]
+    end
+
+    config.vm.provision "ansible" do |ansible|
+        ansible.playbook = boxes[0]['playbook']
+    end
+end
