@@ -16,6 +16,7 @@
         "name": "db",
         "description": "Database VM. Spinning it up prior to the app VMs",
         "box": "bionic_docker_local.box",
+        "playbook": "ansible/petclinic-database.yml",
         "memory": 1024,
         "cpus": 1,
         "ip": "192.168.56.20"
