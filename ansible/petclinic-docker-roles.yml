@@ -1,6 +1,11 @@
 ---
-- hosts: default
+- hosts: app1,app2
   become: true
+  pre_tasks:
+    - name: Update repositories cache
+      apt:
+        update_cache: yes
+
   roles:
     - geerlingguy.docker
 
@@ -10,7 +15,7 @@
       apt:
         update_cache: yes
         state: latest
-        name: python-pip
+        name: python3-pip
 
     - name: install 'Docker SDK for Python'
       #become: true  # WILL STOP WORKING IF UNCOMMENTED
