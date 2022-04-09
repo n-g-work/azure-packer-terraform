@@ -3,11 +3,11 @@
     {
       "type": "vagrant",
       "communicator": "ssh",
-      "source_path": "hashicorp/focal64",
+      "source_path": "https://cloud-images.ubuntu.com/bionic/current/bionic-server-cloudimg-amd64-vagrant.box",
       "provider": "virtualbox",
       "add_force": true,
       "insert_key": true,
-      "box_name": "petclinic-vm"
+      "box_name": "petclinic-ubuntu-18.04"
     }
   ],
   "provisioners": [{
