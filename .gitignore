@@ -52,6 +52,14 @@ crash.log
 # For built boxes
 *.box
 
+####ANSIBLE####
+ansible/roles/**
+
 ####LOCAL####
 packer/demo
 _petri.sh
+
+####VAGRANT####
+.vscode
+*.bak
+.vagrant
