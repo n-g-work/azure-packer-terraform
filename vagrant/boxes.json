@@ -48,6 +48,7 @@
         "name": "monitoring",
         "description": "Monitoring VM. The crown jewel - it supposed to monitor the whole pack",
         "box": "bionic_docker_local.box",
+        "playbook": "ansible/monitoring.yml",
         "memory": 1024,
         "cpus": 1,
         "ip": "192.168.56.50"
