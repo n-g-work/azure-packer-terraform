@@ -1,0 +1,30 @@
+---
+- hosts: default
+  become: true
+  pre_tasks:
+    - name: Update repositories cache
+      apt:
+        update_cache: yes
+
+  roles:
+    - geerlingguy.docker
+
+  tasks:
+    - name: install python dependencies
+      become: true
+      apt:
+        update_cache: yes
+        state: latest
+        name: python3-pip
+
+    - name: install 'Docker SDK for Python'
+      #become: true  # WILL STOP WORKING IF UNCOMMENTED
+      pip:
+        name: docker
+
+    - name: add vagrant user to docker group
+      user:
+        name: vagrant
+        append: yes
+        groups: docker
+      become: true
